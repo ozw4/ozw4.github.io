@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>論文解説ポータル – Paper Insights</title>
+
+  <!-- ▶ インラインで最小の装飾。必要に応じて assets/css/style.css へ分離 -->
+  <style>
+    :root {
+      --bg: #f7f9fc;
+      --card-bg: #ffffff;
+      --accent: #0d6efd;
+      --text: #1a1a1a;
+      --radius: 8px;
+      --shadow: 0 2px 6px rgba(0,0,0,.05);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg); color: var(--text);
+      line-height: 1.6;
+    }
+    header {
+      background: var(--accent); color: #fff; padding: 1.2rem 2rem;
+    }
+    header h1 { margin: 0; font-size: 1.8rem; }
+    main { max-width: 960px; margin: 2rem auto; padding: 0 1rem; }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .paper-card {
+      background: var(--card-bg); border-radius: var(--radius);
+      padding: 1.2rem 1.4rem; box-shadow: var(--shadow);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .paper-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 12px rgba(0,0,0,.08);
+    }
+    .paper-card h3 {
+      margin: 0 0 0.5rem; font-size: 1.1rem;
+    }
+    .paper-card h3 a {
+      color: var(--accent); text-decoration: none;
+    }
+    .paper-card h3 a:hover { text-decoration: underline; }
+    .meta { font-size: 0.9rem; color: #555; margin-bottom: 0.6rem; }
+    footer {
+      text-align: center; padding: 2rem 0 1rem; font-size: 0.9rem; color: #666;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Paper Insights – 論文解説ポータル</h1>
+</header>
+
+<main>
+  <p>機械学習・信号処理・画像処理を中心に、注目論文の要点を日本語でかみ砕いて紹介します。</p>
+
+  <section class="card-grid">
+    <!-- ▼ 1 枚目 -->
+    <article class="paper-card">
+      <h3><a href="papers/noise2self.html">Noise2Self: Blind Denoising by Self‑Supervision</a></h3>
+      <div class="meta">Batson &amp; Royer · CVPR 2019</div>
+      <p>
+        教師なしで画像ノイズ除去を学習する “自己教師” アプローチを提案。
+        入力画像のみを用い、<em>J‑invariant</em> マスキングで真の誤差を推定する手法が特徴です。
+      </p>
+    </article>
+
+    <!-- ▼ 2 枚目 -->
+    <article class="paper-card">
+      <h3><a href="papers/noise2void.html">Noise2Void: Learning Denoising from Single Noisy Images</a></h3>
+      <div class="meta">Krull et al. · CVPR 2019</div>
+      <p>
+        ピクセル除外ベースのトレーニングにより、クリーン画像不要で CNN を訓練可能に。
+        ノイズ構造を活かした高速・軽量な実装が利点。
+      </p>
+    </article>
+
+    <!-- ▼ 3 枚目 -->
+    <article class="paper-card">
+      <h3><a href="papers/noise2same.html">Noise2Same: Optimizing a Self‑Supervised Bound for Image Denoising</a></h3>
+      <div class="meta">Xie et al. · NeurIPS 2020</div>
+      <p>
+        Noise2Self の誤差上界を厳密化し、収束保証を持つ新しい自己教師損失を導入。
+        ノイズ分布に依存しない汎用性が注目されています。
+      </p>
+    </article>
+
+    <!-- ▼ 必要に応じて追加 -->
+  </section>
+
+  <h2 id="tags">テーマ別タグ</h2>
+  <p>超解像 • セグメンテーション • 変分推論 • 地震解析 … <em>coming soon</em></p>
+</main>
+
+<footer>
+  © 2025 Paper Insights. すべての論文は各出版社の著作権下にあります。<br>
+  サイト内の解説は <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.ja">CC BY‑SA 4.0</a> で再利用可。
+</footer>
+
+</body>
+</html>
