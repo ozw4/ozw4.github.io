@@ -1,0 +1,645 @@
+<head>
+  <!-- ─── 基本メタデータ ──────────────────────────────── -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>論文解説ページ | Your Paper Title</title>
+  <meta name="description" content="論文内容をわかりやすく解説するページです。">
+
+  <!-- ─── フォント（欧文：Inter／和文：Noto Serif JP） ───────── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Noto+Serif+JP:wght@400;700&display=swap"
+    rel="stylesheet">
+
+  <!-- MathJax v3 -->
+  <script async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+          id="MathJax-script">
+  </script>
+  <!-- ─── スタイル ─────────────────────────────────── -->
+  <style>
+    /* フォント設定 */
+    :root {
+      --font-sans: 'Inter', sans-serif;
+      --font-serif: 'Noto Serif JP', 'Hiragino Mincho ProN', '游明朝', serif;
+      --accent: #3273dc;       /* リンク・強調色（ネイビー寄りのブルー） */
+      --bg:     #ffffff;
+      --fg:     #1c1c1e;
+      --fg-sub: #555;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1c1c1e;
+        --fg: #e5e5e7;
+        --fg-sub: #9a9aa0;
+      }
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-serif);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-sans);
+      font-weight: 600;
+      margin-top: 2.2rem;
+      margin-bottom: 1rem;
+      line-height: 1.25;
+    }
+    h1 { font-size: 2.2rem; }
+    h2 { font-size: 1.75rem; }
+    h3 { font-size: 1.45rem; }
+
+    p, li {
+      font-size: 1rem;
+      margin: 0 0 1.15rem;
+    }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    a:hover, a:focus {
+      text-decoration: underline;
+    }
+    /* コードブロック・インラインコード */
+    code, pre {
+      font-family: 'SFMono-Regular', Consolas, 'Roboto Mono', monospace;
+      font-size: 0.95rem;
+      background: rgba(0,0,0,0.06);
+      border-radius: 4px;
+      padding: 0.15em 0.35em;
+    }
+    pre {
+      padding: 1em;
+      overflow-x: auto;
+    }
+    /* 図表キャプション */
+    figure {
+      margin: 2rem 0;
+      text-align: center;
+    }
+    figcaption {
+      font-size: 0.9rem;
+      color: var(--fg-sub);
+      margin-top: 0.5rem;
+    }
+    /* レスポンシブな中央寄せレイアウト */
+  .container {
+    max-width: 100ch;       /* 読みやすい横幅に拡大 */
+    margin: 0 auto;        /* 画面中央寄せ */
+    padding: 2rem 1rem 3rem;/* 上下左右に十分な余白 */
+  }
+  </style>
+</head>
+<body>
+  <div class="container">
+<h2>タイトル</h2>
+<p>Noise2Self: 自己教師ありによるブラインドデノイジング</p>
+
+<h2>著者情報</h2>
+<p>Joshua&nbsp;Batson<sup>*</sup>、Loic&nbsp;Royer<sup>*</sup></p>
+<p><sup>*</sup>共同筆頭著者。所属：Chan-Zuckerberg&nbsp;Biohub。</p>
+<p>連絡先：Joshua&nbsp;Batson &lt;joshua.batson@czbiohub.org&gt;、Loic&nbsp;Royer &lt;loic.royer@czbiohub.org&gt;</p>
+<p>掲載先：Proceedings of the 36<sup>th</sup> International Conference on Machine Learning, Long&nbsp;Beach, California, PMLR&nbsp;97, 2019。</p>
+<p>©&nbsp;2019 著者ら。</p>
+
+<h2>Abstract</h2>
+<p>本研究では、信号に関する事前知識、ノイズ推定、あるいはクリーンな学習データを一切必要としない、高次元計測のための汎用的なデノイジング枠組みを提案する。唯一の前提は、計測の異なる次元間ではノイズが統計的に独立であり、真の信号には何らかの相関が存在することである。</p>
+<p>我々は「J 不変」と呼ばれる幅広い関数クラスについて、ノイズを含むデータのみからデノイザの性能を推定できることを示す。この性質を利用することで、メディアンフィルタの単一ハイパーパラメータから数百万個の重みを持つディープニューラルネットワークに至るまで、任意のパラメトリックデノイジングアルゴリズムのJ 不変版を自動的にキャリブレーションできる。</p>
+<p>本枠組みを、画素間のノイズ独立性を利用する自然画像および顕微鏡画像データ、さらには個々の分子検出の独立性を利用する単一細胞遺伝子発現データに適用し、その有効性を実証した。</p>
+
+<h2>1. Introduction</h2>
+
+<p>我々はしばしば、ノイズを含む高次元計測から信号を復元したいと考える。高解像度カメラ、電子顕微鏡、DNA シーケンサなどの装置は、数千から数百万次元にも及ぶ計測を生成できる。しかし、超高速フレームレートでの低照度撮影、個々の分子の電子顕微鏡観察、あるいは数万細胞の同時シーケンスのように極限まで装置を活用すると、各特徴量はかなりノイジーになる。それでも対象となる物体には高い構造性があり、異なる特徴量間には強い相関が存在する。</p>
+
+<p>言い換えれば、対象物が存在する潜在空間の次元が計測空間の次元よりはるかに低い場合、当該構造を暗黙的に学習し、計測値をデノイズして、信号を事前知識なしで回復できる可能性がある。</p>
+
+<p>従来のデノイズ法は、ガウス性などノイズの特性、あるいは空間的・時間的平滑性、自己相似性、低ランク性など信号の構造を各々利用する。しかし、それらの手法の性能は仮定の正確性に制限される。たとえば、データが真に低ランクでなければ低ランクモデルは不適合である。また、スムージングの度合いや自己相似性のスケール、行列ランクといったハイパーパラメータの調整も必要になり、新しいドメインやモダリティへの適用を難しくする。</p>
+
+<p>対照的に、ノイズ付き計測 <span class="math">\(x_i\)</span> とクリーン計測 <span class="math">\(y_i\)</span> のペアからなるデータ駆動型の事前分布を用いれば、教師あり学習問題を構成できる。ニューラルネットワークを訓練して <span class="math">\(x_i\)</span> から <span class="math">\(y_i\)</span> を予測させれば、新たなノイズ付き計測のデノイズに利用できる (Weigert et al., 2018)。</p>
+
+<p>Lehtinen らは、クリーンターゲットが不要であることを示した (2018)。同一ターゲットの独立したノイズ測定ペア <span class="math">\((x_i, x_i')\)</span> を用いてニューラルネットを訓練すると、一定の分布仮定の下でクリーン信号を学習できる。こうした手法は画像デノイズに畳み込みニューラルネットの成功を拡張するものだが、各ターゲットを複数回測定する実験設定が必要になる。</p>
+
+<p>本研究では、自己教師あり学習にもとづくブラインドデノイズの枠組みを提案する。真の信号を条件としたときにノイズが独立である特徴量群を互いに予測させることで、各対象物を単一回だけノイズ測定しても教師あり法に近い性能でデノイズ関数を学習できる。同じアプローチは、メディアンフィルタや Non-Local Means のような従来型画像デノイズ手法をキャリブレーションする際にも利用でき、異なる独立性構造を用いれば極端にアンダーサンプリングされた単一細胞遺伝子発現データのデノイズにも適用できる。</p>
+
+<figure>
+  <img src="Figure_1.jpg" alt="Figure 1">
+  <figcaption>図1 (a) 測定ベクトル <span class="math">\(x\)</span> の次元を示す箱。<span class="math">\(J\)</span> はその部分集合であり、<span class="math">\(f\)</span> は <span class="math">\(J\)</span>-不変関数である。すなわち <span class="math">\(f(x)_J\)</span> は <span class="math">\(x_J\)</span> に依存しない。この性質により、データにおける次元集合間の条件付き独立ノイズを利用した自己教師あり学習が可能になる。(b) 独立な画像取得、(c) 単一画像内で独立な画素、(d) 単一細胞から独立に検出された RNA 分子の例。</figcaption>
+</figure>
+
+<p>信号 <span class="math">\(y \in \mathbb{R}^m\)</span> とそのノイズ測定 <span class="math">\(x \in \mathbb{R}^m\)</span> を確率変数の対としてモデル化する。<span class="math">\(J \subset \{1,\dots,m\}\)</span> を次元の部分集合とし、<span class="math">\(x_J\)</span> をその制限と記す。</p>
+
+<p><strong>定義.</strong> 次元集合の分割 <span class="math">\(\mathcal{J}\)</span> を考える。<span class="math">\(J \in \mathcal{J}\)</span> に対し、関数 <span class="math">\(f : \mathbb{R}^m \to \mathbb{R}^m\)</span> が <em>J-不変</em> であるとは、<span class="math">\(f(x)_J\)</span> が <span class="math">\(x_J\)</span> に依存しないことをいう。すべての <span class="math">\(J \in \mathcal{J}\)</span> について J-不変なら <span class="math">\(f\)</span> を <span class="math">\(\mathcal{J}\)</span>-不変と呼ぶ。</p>
+
+<p>そこで、自己教師あり損失</p>
+
+<p>$$
+L(f) = E\bigl[\,\|f(x) - x\|^2\,\bigr] \tag{1}
+$$</p>
+
+<p>を <span class="math">\(\mathcal{J}\)</span>-不変関数 <span class="math">\(f\)</span> 上で最小化することを提案する。<span class="math">\(f\)</span> は各部分集合 <span class="math">\(J\)</span> の外側情報のみで <span class="math">\(J\)</span> 内を予測する必要があるため、恒等写像にはなり得ない。</p>
+
+<p><strong>命題 1.</strong> <span class="math">\(x\)</span> が <span class="math">\(y\)</span> の不偏推定量、すなわち \( E[x\mid y]=y \) であり、各 <span class="math">\(J \in \mathcal{J}\)</span> においてノイズが <span class="math">\(y\)</span> を条件として <span class="math">\(J\)</span> とその補集合 <span class="math">\(J^{c}\)</span> で独立とする。<span class="math">\(f\)</span> が <span class="math">\(\mathcal{J}\)</span>-不変ならば</p>
+
+<p>$$
+E\bigl[\,\|f(x) - x\|^2\,\bigr]
+ = E\bigl[\,\|f(x) - y\|^2\,\bigr] + E\bigl[\,\|x - y\|^2\,\bigr] \tag{2}
+$$</p>
+
+<p>すなわち、自己教師あり損失は通常の教師あり損失とノイズ分散の和となる。したがって <span class="math">\(\mathcal{J}\)</span>-不変関数族上で自己教師あり損失を最小化すれば、与えられたデータに対する最適デノイザが得られる。</p>
+
+<p>たとえば、信号が画素ごとに独立・平均 0 のノイズを持つ画像の場合、<span class="math">\(\mathcal{J}=\{\{1\},\dots,\{m\}\}\)</span> とすると、中央画素を除いたドーナツ型メディアンフィルタは <span class="math">\(\mathcal{J}\)</span>-不変関数の例となる。異なる半径での自己教師あり損失を比較すれば最適半径が選択できる (§3 参照)。</p>
+
+<p>ドーナツメディアンはパラメータが 1 つと単純だが、より表現力のある関数族を探索することも可能である。極端な場合、すべての <span class="math">\(\mathcal{J}\)</span>-不変関数を探索して全体最適を求められる。</p>
+
+<p><strong>命題 2.</strong> (1) を最小化する <span class="math">\(\mathcal{J}\)</span>-不変関数 <span class="math">\(f^{*}_{\mathcal{J}}\)</span> は</p>
+
+<p>$$
+f^{*}_{\mathcal{J}}(x)_J
+  = E\!\left[\,y_J \mid x_{J^{c}}\,\right]
+$$</p>
+
+<p>を各 <span class="math">\(J \in \mathcal{J}\)</span> について満たす。すなわち、<span class="math">\(y\)</span> の各部分集合に対し、その補集合を観測した条件付き期待値が最適予測となる。</p>
+
+<p>本稿 §4 では解析例を用いて、<span class="math">\(\mathcal{J}\)</span>-不変最適デノイザが特徴間相関の増大とともに一般の最適デノイザに近づくことを示す。さらに §5 では、マスキング手続きにより <span class="math">\(\mathcal{J}\)</span>-不変化した深層畳み込みネットが 3 種の多様なデータセットで最先端のブラインドデノイズ性能に達することを示す。GitHub¹ にサンプルコードを公開し、補遺に証明を収録している。</p>
+
+<h2>2. Related Work</h2>
+
+<p>ブラインドデノイズ手法は例外なく、信号やノイズの構造に関する何らかの仮定に基づいている。本節では、その仮定を大別し、従来法と近年の手法を概観する。以下では文献が最も豊富な画像デノイズを主題とするが、多くの手法は他の時空間信号や一般のベクトル計測にも自然に拡張し得る。</p>
+
+<p><strong>Smoothness:</strong> 自然画像や時空間信号は滑らかに変化すると仮定されることが多い (Buades et al., 2005b)。ガウシアン、メディアンなどの局所平均フィルタを適用してノイズを平滑化するのは古典的な方法である。平滑化の度合い—たとえばフィルタの幅—は視覚的評価によりハイパーパラメータ調整されることが多い。</p>
+
+<p><strong>Self-Similarity:</strong> 自然画像には自己相似性があり、画像内の各パッチは同一画像内の他のパッチと高い類似度を示す。古典的な non-local means アルゴリズムは、類似パッチの中心画素の加重平均で元の中心画素を置き換える (Buades et al., 2005a)。より頑健な BM3D は類似パッチをスタックし、周波数空間でしきい値処理を行う (Dabov et al., 2007)。これら手法のハイパーパラメータは性能に大きく影響し (Lebrun, 2012)、未知のノイズ分布をもつ新しいデータセットでは原理的に調整が難しい。</p>
+
+<p>畳み込みニューラルネットワーク (CNN) も、同一の小さなフィルタを線形結合して出力を生成するため別種の自己相似性を生む。<em>Deep Image Prior</em> (Ulyanov et al., 2017) はこの性質を利用し、単一画像に対して生成的 CNN を学習し、ネットがノイズに適合する前に学習を停止する。</p>
+
+<p><strong>Generative:</strong> 微分可能な生成モデル—たとえば生成対向ネットワークで学習したニューラルネット <span class="math">\(G\)</span>—が与えられれば、データをネットの値域へ射影することでデノイズできる (Tripathi et al., 2018)。</p>
+
+<p><strong>Gaussianity:</strong> 最近の研究 (Zhussip et al., 2018; Metzler et al., 2018) では、ノイズが独立同分布ガウスである特殊な場合に Stein の不偏リスク推定量に基づく損失を用いてニューラルネットを訓練している。</p>
+
+<p><strong>Sparsity:</strong> 自然画像はウェーブレットや DCT 基底上でほぼスパースである (Chang et al., 2000)。JPEG などの圧縮アルゴリズムは小さな変換係数をしきい値化することでこの性質を利用する (Pennebaker &amp; Mitchell, 1992)。これはデノイズにもなるが、シャープなエッジ周辺に生じるリンギングなど既知のアーティファクトを招く。ハイパーパラメータには基底の選択としきい値の大きさが含まれる。別の方法として、データから過完備辞書を学習し、その基底上でスパース性を追求するものもある (Elad &amp; Aharon, 2006; Papyan et al., 2017)。</p>
+
+<p><strong>Compressibility:</strong> 一般的なデノイズアプローチとして、いったん損失圧縮を行い、その後伸張する方法がある。この精度は、用いる圧縮方式が信号に適合しているか、またノイズ形態に対して頑健かに依存する。また圧縮率の選択も重要で、過度な圧縮は信号を失い、圧縮不足はノイズを残す。スパース性手法では「ノブ」はスパース度、低ランク行列分解では行列ランクがこれに相当する。</p>
+
+<p>ニューラルネットの <em>オートエンコーダ</em> は学習可能な圧縮の一般的枠組みを提供する。各サンプルはボトルネック層の値として低次元表現に写像され、そこから元の空間へ再構成される (Gallinari et al., 1987; Vincent et al., 2010)。ノイズを含むデータで訓練したオートエンコーダは、よりクリーンなデータを出力することがある。圧縮率はボトルネック層の幅で決まる。</p>
+
+<p>スキップ接続を追加した <em>UNet</em> アーキテクチャは、高レベルで粗い表現を捉えつつ細部も再現でき、とりわけ恒等写像を学習し得る (Ronneberger et al., 2015)。ノイズデータのみで訓練するとデノイズ効果は得られないが、クリーンなターゲットで訓練すれば高精度なデノイズ関数を学習できる (Weigert et al., 2018)。</p>
+
+<p><strong>Statistical Independence:</strong> Lehtinen らは、同一信号の独立なノイズ測定 <span class="math">\(x_1\)</span> から <span class="math">\(x_2\)</span> を予測するよう UNet を訓練すると真の信号を学習することを示した (2018)。これは Noise2Noise 手法として知られる。これを <span class="math">J</span>-不変関数の観点で捉え直すと、<span class="math">\(x = (x_1, x_2)\)</span>, <span class="math">\(J = \{J_1, J_2\}\)</span> とおき、<span class="math">\(f^{*}_{\mathcal{J}}(x)_{J_2} = E[y \mid x_1]\)</span> となる。ビデオでは光フローを用いて別フレームを引き戻す拡張が試みられている (Ehret et al., 2018)。</p>
+
+<p>同時期の研究では、Krull らが画像の一部画素を置換した入力からその画素を予測するよう UNet を訓練している (2018)。彼らの置換戦略は完全な <span class="math">J</span>-不変ではない (一定確率で元の画素が残る) ものの、自然画像と顕微鏡画像の両方で合成および実ノイズに対して良好に機能する。</p>
+
+<p>最後に、Vincent らの「Fully Emphasized Denoising Autoencoders」(2010) は、マスクした入力に対するオートエンコーダ出力と、マスクした真値との MSE を用いたが、その目的はデノイズではなく頑健な表現学習であったことを付記しておく。</p>
+
+<h2>3. Calibrating Traditional Models</h2>
+
+<p>多くのデノイズモデルには、平滑化フィルタの半径、スパース化のしきい値、主成分数など、デノイズの<strong>度合い</strong>を制御するハイパーパラメータが存在する。もしクリーンな <span class="math">\(y\)</span> が得られるなら、デノイザ族 <span class="math">\(f_\theta\)</span> に対して損失 <span class="math">\(‖f_\theta(x)-y‖^{2}\)</span> を最小化することで最適パラメータ <span class="math">\(\theta\)</span> を選べる。しかし実データでは <span class="math">\(y\)</span> が得られないことがほとんどである。それでも自己教師あり損失 <span class="math">\(‖f_\theta(x)-x‖^{2}\)</span> は計算できる。一般の <span class="math">\(f_\theta\)</span> に対してこの損失は真の損失と無関係だが、<span class="math">\(f_\theta\)</span> が <span class="math">\(J\)</span>-不変なら、自己教師あり損失は真の損失にノイズ分散を加えたものに等しくなり（式&nbsp;2）、同じ <span class="math">\(\theta\)</span> で最小化される。</p>
+
+<figure>
+  <img src="Figure_2.jpg" alt="Figure 2">
+  <figcaption>図2 グラウンドトゥルースなしでのメディアンフィルタのキャリブレーション。フィルタ半径 <span class="math">\(r\)</span> を変えると複数のメディアンフィルタが得られる。<em>ドーナツ</em>・メディアンのように <span class="math">\(J\)</span>-不変な関数では、自己教師あり損失（赤矢印）から最適半径を読み取れる。</figcaption>
+</figure>
+
+<p>図&nbsp;2では、各画素を半径 <span class="math">\(r\)</span> の円内メディアンで置換する通常のメディアンフィルタ <span class="math">\(g_r\)</span> と、中央画素を除いた同円内メディアンで置換するドーナツメディアン <span class="math">\(f_r\)</span> を比較した。独立同分布ガウスノイズ画像に対し、単一画素ごとの分割 <span class="math">\(J=\{\{1\},\dots,\{m\}\}\)</span> を取るとドーナツメディアンは <span class="math">\(J\)</span>-不変となる。ドーナツメディアンでは自己教師あり損失 <span class="math">\(‖f_r(x)-x‖^{2}\)</span> の最小値が真の損失 <span class="math">\(‖f_r(x)-y‖^{2}\)</span> の最小値の真上に位置し、半径 <span class="math">\(r=3\)</span> が最適と決定できる。一方、通常のメディアンでは自己教師あり損失が単調増加であり、真の損失に関する情報を与えない。</p>
+
+<p>より一般に、古典的デノイザ <span class="math">\(g_\theta\)</span> と隣接画素が異なる部分集合に入るような分割 <span class="math">\(J\)</span> を取り、近傍平均 <span class="math">\(s(x)\)</span> を用いて次式で <span class="math">\(J\)</span>-不変版を構成できる：</p>
+
+<p>$$
+f_\theta(x)_J := g_\theta\!\bigl(1_J \cdot s(x)\;+\;1_{J^{c}}\cdot x\bigr)_J,
+\tag{3}
+$$</p>
+
+<p>近傍平均で値を置換してから <span class="math">\(g_\theta\)</span> を適用するため、出力は <span class="math">\(x_J\)</span> に依存しない。波レットデノイザ（しきい値 <span class="math">\(\sigma\)</span>）や NL-means（カットオフ距離 <span class="math">\(h\)</span>）に対しても同様に <span class="math">\(J\)</span>-不変化し、4×4 グリッド分割を用いた結果を補足図1に示す。単純な内挿自体が有効に働く場合もあり、<span class="math">\(f_\theta\)</span> が元の <span class="math">\(g_\theta\)</span> より高性能になることもある。</p>
+
+<p>表&nbsp;1は、単一画像上で最適にチューニングした 3 種の <span class="math">\(J\)</span>-不変デノイザを比較したものである。自己教師あり損失が最小のモデルが、ピーク信号対雑音比（PSNR）でも最良の性能を示す。</p>
+
+<table>
+  <caption>表1 古典的デノイザの最適 <span class="math">\(J\)</span>-不変版の比較（+ は最適な量の元画像を線形混合した場合）。</caption>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Loss<br>(J-inv)</th>
+      <th>PSNR<br>(J-inv)</th>
+      <th>PSNR<br>(J-inv+)</th>
+      <th>PSNR<br>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Median</td><td>0.0107</td><td>27.5</td><td>28.2</td><td>27.1</td></tr>
+    <tr><td>Wavelet</td><td>0.0113</td><td>26.0</td><td>26.9</td><td>24.6</td></tr>
+    <tr><td>NL-means</td><td>0.0098</td><td>30.4</td><td>30.8</td><td>28.9</td></tr>
+  </tbody>
+</table>
+
+<h3>3.1 Single-Cell</h3>
+<p>単一細胞トランスクリプトーム実験では、数千個の細胞を分離して溶解し、それぞれの mRNA を抽出・バーコード化してシーケンスする。各 mRNA 分子は遺伝子にマッピングされ、約 20,000 次元のカウントベクトルとしてその細胞の遺伝子発現を近似する。高並列化された近年の実験では、細胞内に存在する数十万分子のうち数千分子しか捕捉・シーケンスされない (Milo ら, 2010)。その結果、発現ベクトルは著しくアンダーサンプリングされ、低発現遺伝子は 0 と観測される。このため、遺伝子間の共発現や分化過程の遷移といった単純な関係性が見えづらくなる。<!-- :contentReference[oaicite:0]{index=0} --></p>
+
+<p>測定を「細胞から捕捉された分子の集合」とみなし、その集合を無作為に J<sub>1</sub> と J<sub>2</sub> の 2 つに分割する。各集合内の遺伝子カウントを合計（正規化）して得られるベクトル x<sub>J1</sub> と x<sub>J2</sub> は、真の mRNA 含量 y を条件とすれば独立である。この性質を利用し、x<sub>J1</sub> から x<sub>J2</sub> を、あるいはその逆を予測するモデルを学習させることで x をデノイズできる。<!-- :contentReference[oaicite:1]{index=1} --></p>
+
+<p>本研究では、Paul ら (2015) の骨髄由来細胞 2 730 個のデータセットを用い、主成分回帰 (PCR) に自己教師あり損失を適用して最適な主成分数を決定した。データには幹細胞が含まれ、これらは赤血球系列または骨髄系系列へ分化する。各系列で優先的に発現する遺伝子の発現分布を、正規化済みのノイズデータと、主成分数が過少・過剰・最適の場合のデノイズ後データについて Fig.&nbsp;3 に示す。<!-- :contentReference[oaicite:2]{index=2} --></p>
+
+<p>生データでは細胞集団構造を判別するのが難しい。補正不足の場合、幹細胞マーカー Ifitm1 は依然として見えない。補正過剰の場合、幹細胞が Klf1 や Mpo を多く発現しているように見える。最適な補正では Ifitm1 の発現が他マーカーの低発現と一致し、幹細胞集団と 2 つの成熟状態への遷移が容易に可視化できる。<!-- :contentReference[oaicite:3]{index=3} --></p>
+
+<figure>
+  <img src="Figure_3.jpg" alt="Figure 3">
+  <figcaption>図 3. 自己教師あり損失による線形デノイザのキャリブレーション。(a) 骨髄系マーカー Mpo、赤血球系マーカー Klf1、幹細胞マーカー Ifitm1 の生データ発現。(e) 主成分回帰に対する自己教師あり損失。(d) 主成分 17 （赤矢印）が最適な場合のデノイズ結果。(c) 主成分が少な過ぎる場合、(b) 多過ぎる場合。X 軸は平方根正規化カウント。<!-- :contentReference[oaicite:4]{index=4} --></figcaption>
+</figure>
+
+<h3>3.2 PCA Cross-validation</h3>
+<p>主成分分析 (PCA) のランク k を選択するための交差検証は注意を要する。主成分を増やすと、保留データに対しても適合度が必ず向上するためである (Bro ら, 2008)。Owen と Perry は、特徴次元を J<sub>1</sub> と J<sub>2</sub> に分割し、さらにサンプルを訓練群と検証群に分ける手法を提案した (Owen & Perry, 2009)。与えられた k について、ランク k の主成分回帰
+\(f_k : X_{\text{train},J_1} \rightarrow X_{\text{train},J_2}\)
+を学習し、検証集合で
+\( \|f_k(X_{\text{valid},J_1}) - X_{\text{valid},J_2}\|_2^2 \)
+を計算する。訓練／検証および J<sub>1</sub>/J<sub>2</sub> を入れ替えて繰り返し、総検証損失が最小となる k を選択する。シミュレーションでは、\(X\) が低ランク行列とガウス雑音の和である場合、この k がしばしば最適となることが示されている (Owen & Perry, 2009; Owen & Wang, 2016)。<!-- :contentReference[oaicite:5]{index=5} --></p>
+
+<p>この手順は、{J<sub>1</sub>, J<sub>2</sub>}-不変な主成分回帰を自己教師あり損失で学習し、同じ損失でクロスバリデーションすることに相当する。<!-- :contentReference[oaicite:6]{index=6} --></p>
+
+<h2>4. Theory</h2>
+<!-- :contentReference[oaicite:0]{index=0} -->
+<p>理想的な信号再構成の枠組みにおいては、信号 <em>y</em> の事前分布 \(p(y)\) と、ノイズを含む測定過程の確率モデル \(p(x\mid y)\) が与えられている。観測 \(x\) を得た後の事後分布はベイズ則</p>
+
+<p>$$
+p(y\mid x)=\frac{p(x\mid y)\,p(y)}{\displaystyle \int p(x\mid y)\,p(y)\,dy}
+$$</p>
+
+<p>で表される。実際には、事後分布の平均や中央値といった統計量を近似する関数 \(f(x)\) を求めるのが一般的である。平均は次の二乗誤差損失を最小にする関数として得られる。</p>
+<!-- :contentReference[oaicite:1]{index=1} -->
+<p>$$
+\mathbb{E}_{x}\,\|f(x)-y\|^{2}
+$$</p>
+
+<p>ここで、測定の各次元を分割する集合族 \(\mathcal{J}\) を固定し、各部分集合 \(J\in\mathcal{J}\) についてノイズが条件付きで独立</p>
+<!-- :contentReference[oaicite:2]{index=2} -->
+<p>$$
+p(x\mid y)=p(x_J\mid y)\,p(x_{J^{c}}\mid y)
+$$</p>
+
+<p>であると仮定する。このとき自己教師あり損失</p>
+
+<p>$$
+L(f)=\mathbb{E}\,\|f(x)-x\|^{2}
+$$</p>
+
+<p>を二乗誤差に展開すると</p>
+<!-- :contentReference[oaicite:3]{index=3} -->
+<p>$$
+\mathbb{E}_{x,y}\|f(x)-y\|^{2}+\|x-y\|^{2}-2\langle f(x)-y,\;x-y\rangle
+$$</p>
+
+<p><strong>命題&nbsp;1</strong>&nbsp;(Proposition&nbsp;1). \(x\) が <em>y</em> の不偏推定量であり、\(\mathcal{J}\) に従う部分集合間でノイズが条件付き独立で、かつ \(f\) が \(\mathcal{J}\)-不変であれば</p>
+<!-- :contentReference[oaicite:4]{index=4} -->
+<p>$$
+\mathbb{E}\,\|f(x)-x\|^{2}=\mathbb{E}\,\|f(x)-y\|^{2}+\mathbb{E}\,\|x-y\|^{2}. \tag{2}
+$$</p>
+
+<p>すなわち自己教師あり損失は、教師あり損失とノイズ分散の和になるため、\(\mathcal{J}\)-不変関数の中でこれを最小化すれば最適なデノイザが得られる。</p>
+
+<p>さらに、任意の \(\mathcal{J}\)-不変関数 \(f\) は出力を各 \(J\) ごとに分離した <em>f<sub>J</sub></em> の集合として表せる。</p>
+<!-- :contentReference[oaicite:5]{index=5} -->
+<p>このとき損失は
+\[
+L(f)=\sum_{J\in\mathcal{J}}\mathbb{E}\,\bigl\|f_J(x_{J^{c}})-x_J\bigr\|^{2}
+\]
+となり、最小値は
+\[
+f_J^{*}(x_{J^{c}})=\mathbb{E}\,[x_J\mid x_{J^{c}}]=\mathbb{E}\,[y_J\mid x_{J^{c}}]
+\]
+で与えられる。これが <strong>命題&nbsp;2</strong> である。</p>
+
+<h3>4.1. How good is the optimum?</h3>
+<!-- :contentReference[oaicite:6]{index=6} -->
+<p>入力特徴量の相関が高いほど、\(\mathcal{J}\)-不変最適推定器 \(f^{*}_{\mathcal{J}}\) はベイズ最適推定器 \(\mathbb{E}[y\mid x]\) に近づき、両者はより精度良く <em>y</em> を推定する。</p>
+
+<figure>
+  <img src="Figure_4.jpg" alt="Figure 4">
+  <!-- :contentReference[oaicite:7]{index=7} -->
+  <figcaption>図4. ガウス過程による例。相関長 \(\ell\) が大きくなるにつれて、最適 \(\mathcal{J}\)-不変予測器と真の最適予測器の性能差（MSE）は急速に縮小する。</figcaption>
+</figure>
+
+<p>例として、\(33\times33\) のトロイダル格子上のガウス過程を考え、相関関数 \(K_{p,q}=\exp(-\|p-q\|^{2}/2\ell^{2})\) と白色ガウスノイズ (標準偏差 0.5) を用いて検証した【turn11file0†L91-L100】。</p>
+
+<p><strong>命題&nbsp;3</strong> 任意の分布から得た \((x,y)\) と、同じ共分散行列を持つガウス変量 \((x_G,y_G)\) に対し、それぞれの \(\mathcal{J}\)-不変最適予測器を \(f^{*}_{\mathcal{J}}\) と \(f^{*\,G}_{\mathcal{J}}\) とすると</p>
+<!-- :contentReference[oaicite:8]{index=8} -->
+<p>$$
+\mathbb{E}\,\|y-f^{*}_{\mathcal{J}}(x)\|^{2}\le
+\mathbb{E}\,\|y_G-f^{*\,G}_{\mathcal{J}}(x_G)\|^{2}.
+$$</p>
+
+<figure>
+  <img src="Figure_5.jpg" alt="Figure 5">
+  <!-- :contentReference[oaicite:9]{index=9} -->
+  <figcaption>図5. いずれのデータセットでも、最適予測器の誤差（青）は同共分散のガウス過程による誤差（赤）より小さいことを示す例。</figcaption>
+</figure>
+
+<h3>4.2. Doing better</h3>
+<!-- :contentReference[oaicite:10]{index=10} -->
+<p>\(\mathcal{J}\)-不変関数 \(f(x)\) は出力に \(x_j\) を含まないため、\(f(x)_j\) と元の観測 \(x_j\) は互いに無相関な不偏推定量となる。したがって線形結合</p>
+
+<p>$$
+w_\lambda=\lambda\,f(x)_j+(1-\lambda)\,x_j
+$$</p>
+
+<p>を考えると、その分散は</p>
+<!-- :contentReference[oaicite:11]{index=11} -->
+<p>$$
+\lambda^{2}U+(1-\lambda)^{2}V
+$$</p>
+
+<p>となり、最小化する最適係数は</p>
+
+<p>$$
+\lambda^{*}=\frac{V}{U+V},
+$$</p>
+
+<p>ここで \(U\) と \(V\) はそれぞれ \(f(x)_j\) と \(x_j\) の分散である。最適混合後の PSNR は</p>
+<!-- :contentReference[oaicite:12]{index=12} -->
+<p>$$
+\mathrm{PSNR}(w_{\lambda^{*}},y)=\mathrm{PSNR}(V)+10\log_{10}(1+V/U)
+$$</p>
+
+<p>例として、\(f\) が PSNR を 10 dB 改良する場合でも、最適混合によってさらに約 0.4 dB の向上が得られる【turn12file4†L9-L11】。</p>
+
+<p>以上により、自己教師あり枠組みで得た \(\mathcal{J}\)-不変デノイザは、相関構造の強いデータではベイズ最適推定器に漸近し、さらに線形混合により追加的な性能向上が可能である。</p>
+
+<h2>5. Deep Learning Denoiser</h2>
+
+<p>自己教師あり損失を用いれば、各画像につきノイズ画像が 1 枚しか無い状況でも深層畳み込みニューラルネットワークを学習できる。本研究では 3 つのドメイン (自然画像、漢字画像、蛍光顕微鏡画像) に対し、画素ごとに独立な異分散ノイズを人工的に付加して検証した。自然画像と漢字画像には Poisson・Gaussian・Bernoulli の混合ノイズ、顕微鏡画像には sCMOS カメラノイズを付加した。</p>
+
+<p>画素集合を 25 個のランダムサブセットに分割し、各サブセットをマスクすることで J-不変性を実現したネットワーク \(f_\theta\) を構築した (Batson &amp; Royer, 2019)。アーキテクチャとしては U-Net (Ronneberger <em>et&nbsp;al.</em>, 2015) と全畳み込み型 DnCNN (Zhang <em>et&nbsp;al.</em>, 2017) を用いた。学習時には各ミニバッチで 1 つのマスクのみを適用し、自己教師あり損失 \( \|f_\theta(x) - x\|^2 \) を最小化した。</p>
+
+<p>表&nbsp;2 に示す通り、自己教師ありで学習した両ネット (Noise2Self) は、パラメータ既定値の古典的ブラインドデノイザ Non-Local Means (Buades <em>et&nbsp;al.</em>, 2005) と BM3D (Dabov <em>et&nbsp;al.</em>, 2007) を上回り、クリーン画像を教師とする Noise2Truth や独立ノイズ画像を教師とする Noise2Noise (Lehtinen <em>et&nbsp;al.</em>, 2018) と同等の性能を示した。</p>
+
+<p>得られたネットワーク \(g_\theta\) を直接ノイズ入力に適用すると、J-不変形 \(f_\theta\) よりもわずかに高い PSNR (約 0.5&nbsp;dB) を達成したため、以下の図&nbsp;6 では \(g_\theta\) の出力を採用している。</p>
+
+<p>さらに、パラメータ 56&nbsp;万の DnCNN を単一のノイズ画像だけで自己教師あり学習し、同一画像をデノイズさせる実験を行ったところ、PSNR 31.2&nbsp;dB を達成した。これは従来の古典的フィルタよりも大幅な改善である。</p>
+
+<figure>
+  <img src="Figure_6.jpg" alt="Figure 6">
+  <figcaption>図 6 自然画像・漢字画像・蛍光顕微鏡画像に対するブラインドデノイズ法の比較。古典的手法 (NLM、BM3D) と、自己教師あり学習 (Noise2Self)、独立ノイズ教師あり学習 (Noise2Noise)、クリーン教師あり学習 (Noise2Truth) の出力例を示す。</figcaption>
+</figure>
+
+<table>
+  <caption>表 2 保留テストデータにおける Peak Signal-to-Noise Ratio (PSNR, dB)。CNN の数値は 5 回の学習結果の平均 ± 標準偏差。</caption>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Hànzì</th>
+      <th>ImageNet</th>
+      <th>CellNet</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Raw</td><td>6.5</td><td>9.4</td><td>15.1</td></tr>
+    <tr><td>NLM</td><td>8.4</td><td>15.7</td><td>29.0</td></tr>
+    <tr><td>BM3D</td><td>11.8</td><td>17.8</td><td>31.4</td></tr>
+    <tr><td>U-Net (N2S)</td><td>13.8&nbsp;±&nbsp;0.3</td><td>18.6</td><td>32.8&nbsp;±&nbsp;0.2</td></tr>
+    <tr><td>DnCNN (N2S)</td><td>13.4&nbsp;±&nbsp;0.3</td><td>18.7</td><td>33.7&nbsp;±&nbsp;0.2</td></tr>
+    <tr><td>U-Net (N2N)</td><td>13.3&nbsp;±&nbsp;0.5</td><td>17.8</td><td>34.4&nbsp;±&nbsp;0.1</td></tr>
+    <tr><td>DnCNN (N2N)</td><td>13.6&nbsp;±&nbsp;0.2</td><td>18.8</td><td>34.4&nbsp;±&nbsp;0.1</td></tr>
+    <tr><td>U-Net (N2T)</td><td>13.1&nbsp;±&nbsp;0.7</td><td>21.1</td><td>34.5&nbsp;±&nbsp;0.1</td></tr>
+    <tr><td>DnCNN (N2T)</td><td>13.9&nbsp;±&nbsp;0.6</td><td>22.0</td><td>34.4&nbsp;±&nbsp;0.4</td></tr>
+  </tbody>
+</table>
+
+<h2>6. Discussion</h2>
+
+<p>我々は、ノイズが条件付き独立性構造を持つ高次元計測データのノイズ除去に向けた一般的な枠組みを提示した。また、自己教師あり損失を利用して、任意の <em>J</em> 不変（<em>J</em>-invariant）なデノイザ関数を較正あるいは学習する方法を示した。</p>
+
+<p>与えられた問題に対して最適な分割 <em>J</em> をどのように選択するかには依然として多くの未解決課題が残されている。<em>J</em> の構造は、信号内の依存パターンとノイズ内の独立パターンを反映していなければならない。また、各部分集合 <em>J ∈ J</em> とその補集合との相対サイズは損失関数におけるバイアス–バリアンスのトレードオフを生み、予測に用いる情報量とその予測品質を評価する情報量との交換関係を形成する。</p>
+
+<p>例えば、単一細胞の遺伝子発現計測では、分子単位、遺伝子単位、さらには経路（パスウェイ）単位で分割することが考えられ、これらは転写過程に存在すると想定される確率的ゆらぎに対する異なる仮定を反映している。</p>
+
+<p>本枠組みが、農業や地質学のセンサネットワーク、全脳神経活動の時系列データ、さらには遠方天体の望遠鏡観測データなど、他分野にも応用されることを期待する。</p>
+
+<h2>1. Notation</h2>
+
+<p>変数 \(\mathbf{x}\in\mathbb{R}^m\) と部分集合 \(J\subset\{1,\dots,m\}\) に対して、\(\mathbf{x}_J\) は \(\mathbf{x}\) を集合 \(J\) に属する成分に制限したベクトル、\(\mathbf{x}_{J^{\mathrm{c}}}\) は補集合 \(J^{\mathrm{c}}\) に属する成分に制限したベクトルである。</p>
+
+<p>写像 \(f:\mathbb{R}^m\to\mathbb{R}^m\) が与えられたとき、\(f(\mathbf{x})_J\) は出力ベクトル \(f(\mathbf{x})\) を集合 \(J\) の成分に制限したものを表す。</p>
+
+<p>集合 \(X\) の<strong>分割</strong> \(\mathcal{J}\) とは、互いに交わらず、その和が \(X\) 全体になる部分集合族のことである。</p>
+
+<p>特に \(J=\{j\}\) が単一要素からなる場合、\(\mathbf{x}_{-j}\) と書くと、それは \(\mathbf{x}_{J^{\mathrm{c}}}\)、すなわち成分 \(j\) を除いたすべての成分からなるベクトルを意味する。</p>
+
+<h2>2. Gaussian Processes</h2>
+
+<p>実数ベクトル値確率変数 <span class="math">\(x,\,y\)</span> を考え、<span class="math">\(y\)</span> を <span class="math">\(x\)</span> から平均二乗誤差 (MSE) を最小にして推定する最適写像は条件付き期待値 <span class="math">\(x \mapsto E[y\mid x]\)</span> である。その期待損失は条件付き分散に等しい<!-- :contentReference[oaicite:0]{index=0} -->。</p>
+
+<p>もし <span class="math">\(x\)</span> と <span class="math">\(y\)</span> が同時多変量ガウスなら、この量は共分散行列 <span class="math">\(\Sigma\)</span> のみで決まり、具体的には</p>
+
+<p>$$
+\Sigma=
+\begin{pmatrix}
+\Sigma_{xx} & \Sigma_{yx}\\
+\Sigma_{xy} & \Sigma_{yy}
+\end{pmatrix},
+\qquad
+\operatorname{Var}(y\mid x)=\Sigma_{yy}-\Sigma_{yx}\Sigma_{xx}^{-1}\Sigma_{xy},
+$$</p>
+
+<p>となり <span class="math">\(x\)</span> に依存しない定数である<!-- :contentReference[oaicite:1]{index=1} -->。</p>
+
+<p><strong>Lemma&nbsp;1.</strong> 対称正定半行列<br>
+\(
+\displaystyle
+\Sigma=\begin{pmatrix}\Sigma_{11}&\Sigma_{12}\\ \Sigma_{21}&\Sigma_{22}\end{pmatrix}
+\)
+については</p>
+
+<p>$$
+\Sigma_{11}\;\succeq\;\Sigma_{12}\,\Sigma_{22}^{-1}\,\Sigma_{21}.
+$$</p>
+
+<p>証明は <span class="math">\(\Sigma=X^{\mathsf T}X\)</span> という分解を取り、<span class="math">\(X\)</span> の列空間への射影行列を用いて示す<!-- :contentReference[oaicite:2]{index=2} -->。</p>
+
+<p><strong>Lemma&nbsp;2.</strong> 任意の確率変数対 <span class="math">\((x,y)\)</span> と、同じ共分散行列を持つガウス変数対 <span class="math">\((x_G,y_G)\)</span> に対し</p>
+
+<p>$$
+E_x\bigl\|y-E[y\mid x]\bigr\|^{2}
+\;\le\;
+E_{x_G}\bigl\|y_G-E[y_G\mid x_G]\bigr\|^{2},
+$$</p>
+
+<p>すなわち任意の分布に比べて同一共分散のガウス分布が最悪の MSE を与える<!-- :contentReference[oaicite:3]{index=3} -->。</p>
+
+<p><strong>Proposition&nbsp;1.</strong> <span class="math">\(x,y\)</span> を任意の確率変数、<span class="math">\(x_G,y_G\)</span> をそれと同じ共分散を持つガウス変数とし、各々に対する <span class="math">\(J\)</span>-不変最適予測子を <span class="math">\(f^{*}_{\mathcal J},\,f^{*,G}_{\mathcal J}\)</span> とすると</p>
+
+<p>$$
+E\bigl\|y-f^{*}_{\mathcal J}(x)\bigr\|^{2}
+\;\le\;
+E\bigl\|y_G-f^{*,G}_{\mathcal J}(x_G)\bigr\|^{2}.
+$$</p>
+
+<p>すなわち、観測と同一の共分散をもつガウス過程は <span class="math">\(J\)</span>-不変推定誤差の上界を与える<!-- :contentReference[oaicite:4]{index=4} -->。</p>
+
+<h2>3. Masking</h2>
+
+<p>ニューラルネットワークや一般の関数 <span class="math">\(f\)</span> を <em>J</em>-不変に変換するための入力マスキング手法を述べる。基本的なアイデアは、補間関数 <span class="math">\(s(x)\)</span> を選び、</p>
+
+<p>$$
+g(x)_J \;:=\; f\!\bigl(\mathbf 1_J \cdot s(x)\;+\;\mathbf 1_{J^{\mathrm c}}\cdot x\bigr)_J ,
+$$</p>
+
+<p>と定義することである。ここで <span class="math">\(\mathbf 1_J\)</span> は集合 <span class="math">\(J\)</span> の指示関数である。</p>
+
+<p>論文本文 §3（キャリブレーション）では、<span class="math">\(s\)</span> として中央画素を除いた局所平均が用いられ、具体的には次のカーネルとの畳み込みで与えられる：</p>
+
+<p>$$
+\begin{pmatrix}
+0 & 0.25 & 0\\
+0.25 & 0 & 0.25\\
+0 & 0.25 & 0
+\end{pmatrix}.
+$$</p>
+
+<p>各画素を一様分布 <span class="math">\(\mathcal U[0,1]\)</span> で置き換えることも検討され、この場合 <span class="math">\(g(x)\)</span> は確率的 <em>J</em>-不変関数となる。</p>
+
+<h3>3.1 Uniform Pixel Selection</h3>
+
+<p>Krull ら (2018) は、局所分布 <span class="math">\(q(x)\)</span> を推定して画素をサンプルで置換するマスキング法を提案した。しかし置換に用いる画素値自身が分布推定に使われるため、厳密には <em>J</em>-不変ではない。</p>
+
+<p>彼らの Uniform Pixel Selection (UPS) 法では、半径 <span class="math">\(r\)</span> の近傍から一様に選んだ画素 <span class="math">\(k\)</span> の値で <span class="math">\(x_j\)</span> を置換する。記号 <span class="math">\(\iota_{jk}(x)\)</span> は <span class="math">\(x_j\)</span> を <span class="math">\(x_k\)</span> で置換したベクトルとする。</p>
+
+<p>UPS を入力とする自己教師あり損失</p>
+
+<p>$$
+\mathbb E_x\bigl\|f\bigl(\mathrm{UPS}_j(x)\bigr)_j - x_j\bigr\|^2
+$$</p>
+
+<p>を最小化する最適関数 <span class="math">\(f^{*}\)</span> は</p>
+
+<p>$$
+f^{*}(x)_j
+  = \frac{1}{r^{2}}\,x_j
+  + \Bigl(1-\frac{1}{r^{2}}\Bigr)f^{*}_{\mathcal J}(x)_j,
+$$</p>
+
+<p>を満たす。ここで <span class="math">\(f^{*}_{\mathcal J}(x)_j = \mathbb E[x_j \mid x_{-j}]\)</span> は真の <em>J</em>-不変最適予測子である。すなわち UPS 学習は、十分なデータと表現力を仮定すれば、ノイズ入力 <span class="math">\(x_j\)</span> と Noise2Self 最適値の線形結合を学習する。近傍半径 <span class="math">\(r\)</span> が小さいほどノイズ寄与が大きい。</p>
+
+<p>UPS の利点として、入力と同一の画素分布を保てる点が挙げられる。バイナリ画像などでは局所平均や一様乱数よりも自然であり、ネットワークの過学習を抑制する効果がある。改良として、分布推定時に <span class="math">\(x_j\)</span> を除外し、ランダムな近傍画素で置換することを推奨する。</p>
+
+<h3>3.2 Linear Combinations</h3>
+
+<p><em>J</em>-不変関数 <span class="math">\(f\)</span> では、<span class="math">\(f(x)_j\)</span> と元の観測値 <span class="math">\(x_j\)</span> が互いに無相関かつ不偏推定量となる。そこで線形結合</p>
+
+<p>$$
+w_{\lambda} \;=\; \lambda\,f(x)_j + (1-\lambda)\,x_j
+$$</p>
+
+<p>を考えると、その分散は</p>
+
+<p>$$
+\lambda^{2}U + (1-\lambda)^{2}V,
+$$</p>
+
+<p>となる（<span class="math">\(U=\operatorname{Var}[f(x)_j]\)</span>, <span class="math">\(V=\operatorname{Var}[x_j]\)</span>）。最小化する最適係数は</p>
+
+<p>$$
+\lambda^{*} = \frac{V}{U+V},
+$$</p>
+
+<p>であり、混合推定量の PSNR は</p>
+
+<p>$$
+\operatorname{PSNR}(w_{\lambda^{*}},y)
+  = \operatorname{PSNR}(V) + 10\log_{10}\bigl(1 + V/U\bigr).
+$$</p>
+
+<p>たとえば <span class="math">\(f\)</span> が PSNR を 10 dB 改善する場合、最適混合によりさらに約 0.4 dB 向上する。</p>
+
+<h2>4. Calibrating Traditional Denoising Methods</h2>
+
+<p>本節では、従来型の画像デノイズ手法を自己教師あり枠組みで較正する際に用いた実験設定を述べる。すべての手法は、Python の scikit-image ライブラリ（van der Walt <em>et al.</em>, 2014）に含まれる高解像度カメラ画像を対象とし、その一部を図中にインセットとして示した。</p>
+
+<p>デノイズ処理には、scikit-image 実装のメディアンフィルタ、ウェーブレットデノイザ、および Non-Local Means (NL-means) を使用した。入力画像には [0, 1] 範囲で標準偏差 0.1 のガウス雑音を付加している。</p>
+
+<p>本文に示したメディアンフィルタの較正プロットに加え、ウェーブレットデノイザと NL-means についても同様の較正結果を Supplement 図 1 に示す。</p>
+
+<figure>
+  <img src="Figure_S1.jpg" alt="Figure S1">
+  <figcaption></figcaption>
+</figure>
+
+
+<h2>5. Neural Net Examples</h2>
+
+<h3>5.1 Datasets: Hànzì, CellNet, ImageNet</h3>
+<p><strong>Hànzì.</strong> 13,029 種類の漢字を白文字・黒背景の 64 × 64 画像として描画し、各画像に平均 0・分散 0.7 のガウス雑音と、画素の半分を黒に置換するベルヌーイ雑音を加えた。最終的な総画像数は 78,174 枚であり、90 % を訓練用、10 % をテスト用に分割した。</p>
+
+<p><strong>CellNet.</strong> Broad Bioimage Benchmark Collection から取得した蛍光顕微鏡画像を 128 × 128 のタイル 34,630 枚に分割し、まず NL-means で微弱な実ノイズを除去した後、(i) 画素ごとのゲインばらつき、(ii) ポアソン雑音、(iii) コーシー分布加法雑音から成る sCMOS カメラノイズモデルを適用して強い合成ノイズを生成した。</p>
+
+<p><strong>ImageNet.</strong> ImageNet LSVRC 2013 検証セット 20,121 枚から 128 × 128 のクロップ 60,000 枚を作成し、Poisson (λ = 30)、Gaussian (σ = 80)、Bernoulli (p = 0.2) を各チャネル独立に重畳した。</p>
+
+<h3>5.2 Architecture</h3>
+<p>UNet アーキテクチャ (Ronneberger <em>et al.</em>, 2015) を採用し、エンコーダ・デコーダ間にスキップ接続を配置した。各ブロックは 3 × 3 畳み込み層 2 枚と InstanceNorm からなり、チャネル数は [32, 64, 128, 256]。ダウンサンプリングはストライド付き畳み込み、アップサンプリングは転置畳み込みで行う。</p>
+
+<h3>5.3 Training</h3>
+<p>入力画素集合を 25 分割した \(\mathcal{J}\) を用い、各ミニバッチで 1 つの \(J\) のみを無作為に選んで損失を計算する。マスクされた画素は一様乱数 \(\mathcal{U}[0,1]\) で置換し、</p>
+
+<p>$$
+\sum_{J\in\mathcal{J}}\mathbf 1_J \cdot f_\theta\!\bigl(\mathbf 1_{J^{\mathrm c}}\!\cdot x + \mathbf 1_J \cdot u\bigr)
+\tag{1}
+$$</p>
+
+<p>がランダムな \(J\)-不変関数となるよう学習する。バッチサイズは Hànzì・CellNet で 64、ImageNet で 32、エポック数はそれぞれ 30、50、1 とした。</p>
+
+<h3>5.4 Inference</h3>
+<p>推論では (i) 25 サブセットを順にマスクして式 (1) を適用し完全な \(J\)-不変出力を得る方法と、(ii) 学習済みネットワーク \(g_\theta\) をマスク無しで直接適用する方法を比較した。後者は前者より約 0.5 dB 高い PSNR を示した。</p>
+
+<h3>5.5 Evaluation</h3>
+<p>評価指標には Peak Signal-to-Noise Ratio (PSNR) を用い、ダイナミックレンジ [0, 1] の 2 画像 \(x,y\) に対して</p>
+
+<p>$$
+\mathrm{PSNR}(x,y)=10\log_{10}\!\bigl(1/\|x-y\|^{2}\bigr)
+$$</p>
+
+<p>と定義した。クリッピングのため入力ノイズは条件付き平均 0 ではなく、Blind 系手法 (Noise2Self, Noise2Noise, NL-means, BM3D) では出力がわずかに平均強度へ縮退する。補正として全出力を真値の平均・分散に合わせて再スケーリングした。</p>
+
+<h2>6. Single-Cell Gene Expression</h2>
+
+<!-- :contentReference[oaicite:0]{index=0} -->
+<p>単一細胞の遺伝子発現を得る際の捕捉およびシーケンス工程は情報損失を伴い、その統計はポアソン分布で表現できる。ある細胞について、各遺伝子 <em>i</em> に対する密度を \(\lambda = (\lambda_1,\dots,\lambda_m)\) とし、\(\sum_i \lambda_i = 1\) とする。<em>N</em> 個の分子をサンプリングすると多項分布に従うが、近似的に</p>
+
+<p>$$
+x_i \sim \operatorname{Poisson}(N\lambda_i)
+$$</p>
+
+<p>とみなせる。</p>
+
+<!-- :contentReference[oaicite:1]{index=1} -->
+<p>本来は分子カウントそのものをモデル化したいが、遺伝子発現量は約 5 桁のダイナミックレンジを持つため線形モデルの適合が難しい。そこで通常は正規化変数 \(z\) を導入する。たとえば</p>
+
+<p>$$
+z_i = \rho\!\left(\tfrac{N_0\,x_i}{N}\right),
+$$</p>
+
+<p>ここで \(N=\sum_i x_i\) は細胞あたりの総分子数、\(N_0\) は正規化定数、\(\rho\) は非線形写像である。一般的な \(\rho\) として \(\sqrt{x}\) や \(\log(1+x)\) が用いられる。</p>
+
+<!-- :contentReference[oaicite:2]{index=2} -->
+<p>本研究では Paul ら (2015) の骨髄細胞データセットを解析対象とし、拡散型デノイザ MAGIC のチュートリアルに従った前処理を行った。正規化は scprep パッケージ (van Dijk <em>et&nbsp;al.</em>, 2018) を用い、\(N_0\) を各細胞の総分子数の中央値、\(\rho\) を平方根とした。</p>
+
+<!-- :contentReference[oaicite:3]{index=3} -->
+<p>正規化変数 \(z\) を扱うため、最適デノイザは</p>
+
+<p>$$
+E[z_i \mid \lambda] \;\approx\;
+E_{x_i \sim \operatorname{Poisson}(N\lambda_i)}
+\!\Bigl[\sqrt{x_i}\Bigr]\,
+\sqrt{\tfrac{N_0}{N}}
+$$</p>
+
+<p>を出力することになる。</p>
+
+<!-- :contentReference[oaicite:4]{index=4} -->
+<p>右辺は \(\lambda_i\) の正値域を \([0,\infty)\) に写し、単調増加かつ 0 を 0 に写すため方向情報を保つ。期待値と非線形写像は交換できないので、この式を反転しても \(\lambda_i\) の不偏推定量にはならないが、広いダイナミックレンジに適した定量的指標を与える。</p>
+
+<!-- :contentReference[oaicite:5]{index=5} -->
+<p><small><sup>1</sup> PCR による増幅はランダムな乗法ゆらぎを導入するが、近年の多くのデータセットでは <em>unique molecular identifiers</em> (UMI) が各分子に事前付与され、同一分子由来のリードを重複排除できる。</small></p>
+
+  </div>
+</body>
