@@ -1,0 +1,513 @@
+<head>
+  <!-- ─── 基本メタデータ ──────────────────────────────── -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>論文解説ページ | Your Paper Title</title>
+  <meta name="description" content="論文内容をわかりやすく解説するページです。">
+
+  <!-- ─── フォント（欧文：Inter／和文：Noto Serif JP） ───────── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Noto+Serif+JP:wght@400;700&display=swap"
+    rel="stylesheet">
+
+  <!-- MathJax v3 -->
+  <script async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+          id="MathJax-script">
+  </script>
+  <!-- ─── スタイル ─────────────────────────────────── -->
+  <style>
+    /* フォント設定 */
+    :root {
+      --font-sans: 'Inter', sans-serif;
+      --font-serif: 'Noto Serif JP', 'Hiragino Mincho ProN', '游明朝', serif;
+      --accent: #3273dc;       /* リンク・強調色（ネイビー寄りのブルー） */
+      --bg:     #ffffff;
+      --fg:     #1c1c1e;
+      --fg-sub: #555;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1c1c1e;
+        --fg: #e5e5e7;
+        --fg-sub: #9a9aa0;
+      }
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-serif);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-sans);
+      font-weight: 600;
+      margin-top: 2.2rem;
+      margin-bottom: 1rem;
+      line-height: 1.25;
+    }
+    h1 { font-size: 2.2rem; }
+    h2 { font-size: 1.75rem; }
+    h3 { font-size: 1.45rem; }
+
+    p, li {
+      font-size: 1rem;
+      margin: 0 0 1.15rem;
+    }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    a:hover, a:focus {
+      text-decoration: underline;
+    }
+    /* コードブロック・インラインコード */
+    code, pre {
+      font-family: 'SFMono-Regular', Consolas, 'Roboto Mono', monospace;
+      font-size: 0.95rem;
+      background: rgba(0,0,0,0.06);
+      border-radius: 4px;
+      padding: 0.15em 0.35em;
+    }
+    pre {
+      padding: 1em;
+      overflow-x: auto;
+    }
+    /* 図表キャプション */
+    figure {
+      margin: 2rem 0;
+      text-align: center;
+    }
+    figcaption {
+      font-size: 0.9rem;
+      color: var(--fg-sub);
+      margin-top: 0.5rem;
+    }
+    /* レスポンシブな中央寄せレイアウト */
+  .container {
+    max-width: 100ch;       /* 読みやすい横幅に拡大 */
+    margin: 0 auto;        /* 画面中央寄せ */
+    padding: 2rem 1rem 3rem;/* 上下左右に十分な余白 */
+  }
+  </style>
+</head>
+<body>
+  <div class="container">
+<h2>タイトル</h2>
+<p>分散型音響センシング（DAS）アレイで取得した微小地震データに基づく微小地震イベントの検出・位置決定および速度モデル反演のためのディープニューラルネットワーク</p>
+
+<h2>著者情報</h2>
+<p>
+Daniel Wamriew<sup>1,*</sup>、Roman Pevzner<sup>2</sup>、Evgenii Maltsev<sup>1</sup>、Dimitri Pissarenko<sup>1,3</sup><br>
+<sup>1</sup> Skolkovo Institute of Science and Technology（ロシア連邦モスクワ市ボリショイ大通り30、121205）; E.Maltsev@skoltech.ru（E.M.）; D.Pissarenko@skoltech.ru（D.P.）<br>
+<sup>2</sup> カーティン大学 探査地球物理学部（オーストラリア西オーストラリア州ケンジントン Dick Perry Ave 26, WA 6151）; R.Pevzner@curtin.edu.au<br>
+<sup>3</sup> TotalEnergies Research & Development（ロシア連邦モスクワ市レスナヤ7、125047）<br>
+* 連絡先: Daniel.wamriew@skoltech.ru
+</p>
+<p>
+Citation: Wamriew D.; Pevzner R.; Maltsev E.; Pissarenko D. <i>Sensors</i> <strong>2021</strong>, 21, 6627. DOI: 10.3390/s21196627<br>
+受理日: 2021年8月27日 採択日: 2021年10月1日 公開日: 2021年10月5日
+</p>
+
+<h2>アブストラクト</h2>
+<p>
+近年、光ファイバはその物理的堅牢性と高い空間・時間分解能のため、ボアホール微小地震モニタリング用の分散型音響センシング（Distributed Acoustic Sensing: DAS）アレイとして注目を集めている。結果としてセンサは大量のデータを記録するため、従来の処理手法ではリアルタイムあるいはセミリアルタイムでの解析が非常に困難である。本研究では、DASデータの大容量問題をリアルタイム／セミリアルタイムで処理するための深層学習アプローチを提案する。提案ネットワークは実データ由来の環境ノイズを付加した合成微小地震データで学習し、油圧破砕作業で取得された実フィールドDASデータで検証を行った。結果として、本ネットワークはDASデータから微小地震イベントを検出・位置決定するとともに、速度モデルを高精度で更新できることが示された。イベント位置（x, z）および速度モデルパラメータ（Vp, Vs, 密度）の平均絶対誤差はそれぞれ2.04 %、0.72 %、2.76 %、4.19 %、0.97 %であった。自動化と計算効率に加え、深層学習は処理中の人的データ操作を削減することでデータ整合性を保ち、より正確で再現性の高い結果を導く。</p>
+
+<h2>1. Introduction</h2>
+
+<p>光ファイバケーブルは、坑井内微小地震モニタリング用の分散型音響センシング（Distributed Acoustic Sensing; DAS）としての利用が近年増加している。この技術は従来のジオフォンよりも高い空間的・時間的分解能と長距離計測能力を備えており、地下構造の詳細イメージング、微小地震イベントの検出・位置決定、さらには速度モデル推定を可能にする。また、DAS は電磁干渉に強く、耐薬品性が高く、設置が目立ちにくいという利点も有している (Hartog, 2020)。</p>
+
+<p>DAS はレイリー散乱を利用して光ファイバ沿いのひずみあるいはひずみ速度を計測する技術である (Hartog, 2017; Ning & Sava, 2018)。インテロゲータが光パルスをファイバに送信し、戻り散乱光を記録することで各チャネル内の位相差を取得し、これを信号として用いる。地震波がファイバに到達するとひずみ（ひずみ速度）が変化し、記録信号も対応して変化する。チャネル間隔が短いため、通常の取得条件でも数 m 程度の波長まで折り返し歪みなく計測できる。</p>
+
+<p>ケーブルを坑井内に設置すれば、坑内活動に干渉することなく連続的かつ高密度の記録が可能であり、十分なファイバ結合により高い信号対雑音比（SNR）が得られる。一方で、DAS にはブロードサイド方向への感度不足や短ゲージ長時のゲージ長効果などの制約も存在する。</p>
+
+<p>DAS は地震記録 (Lindsey et al., 2017 ほか)、地下構造イメージング (Lellouch et al., 2019 ほか)、断層帯同定、交通監視、海洋微動・潮汐解析、雷による地面振動記録など、陸上・海中の既存通信ファイバを利用した多様な用途で成功を収めてきた。また、坑井内専用設置では高い SNR が得られ、短波長の地震波を狙った高解像度観測が可能である (Walter et al., 2020; Martin et al., 2017 ほか)。</p>
+
+<p>坑井内センサー配置は、地表近傍の複雑さや散逸性という問題を回避し、地表または地表近傍での記録に比べて解析を容易にする点でも有利である (Daley et al., 2016; Spikes et al., 2019)。</p>
+
+<p>DAS を用いた受動的微小地震モニタリングは 2013 年に初めて実証され、従来型ジオフォンと並置して検証された。その後技術は改良されたが、初期のイベント検出アルゴリズムは効果が限定的で、例えば油圧破砕モニタリングではジオフォンで 785 件検出したのに対し DAS では 31 件しか検出できなかったと報告されている (Webster et al., 2013; Hull et al., 2017 ほか)。</p>
+
+<p>ビームフォーミングを用いた単一垂直ファイバでの方位情報なし検出・位置決定手法では、検出性能がジオフォンの約 30 % に改善された (Lellouch et al., 2020)。さらに個々のチャネル選択を行わず、DAS 記録から幾何学的パラメータを直接計測して位置決定を行う研究もあり、坑井 DAS が地表アレイより一桁多くイベントを検出した例も報告されている (Verdon et al., 2020 ほか)。</p>
+
+<p>機械学習を用いた DAS データの反演も試みられており、良好な成果が報告されているが、これらは大規模で高品質な学習データセットに依存し、その生成には多大な労力を要する (Stork et al., 2020; Binder & Tura, 2020; Lellouch & Biondi, 2021)。</p>
+
+<p>検出・位置決定・速度モデル反演の各手法は大きく進歩したものの、多くはスタンドアロンで一度に一つまたは二つのタスクしか実行できない。したがって、これら三つのタスクをほぼリアルタイムで同時に処理できる手法が求められている。</p>
+
+<p>本研究では、深層学習を用いて DAS データから微小地震イベントを検出・位置決定するとともに、速度モデルを同時に推定する手法の実現可能性を示す。従来の分類ベース検出とは異なり、本研究では回帰ベースのアプローチを採用し、三つのタスクを単一ネットワークで同時に実行する。ネットワークは合成 DAS データで学習し、合成および実測データで検証を行った。</p>
+
+<h2>2.1. Field Microseismic Data</h2>
+
+<p>
+本研究では、米国ユタ州ミルフォード近郊の FORGE 研究サイトにおける Phase 2C
+水圧破砕刺激実験で取得された公開フィールドデータを使用する [39,40]。プロジェクトでは
+刺激坑井とモニタリング坑井を含む 3 本の垂直坑井が利用された。
+モニタリング坑井は深さ 1000 m で、処理坑井の南東 400 m に位置する。
+この坑井に光ファイバケーブルを設置し、処理坑井で水圧破砕を実施した。
+ケーブルは Silixa 社製 iDAS v3 インテロゲータに接続されており、
+ひずみ速度を直接計測する。さらに、3 成分（3C）ジオフォンでも同時にデータを取得した [41]。
+</p>
+
+<p>
+iDAS のゲージ長は 10 m、チャネル間隔は 1 m である。
+2019 年 4 月から 5 月にかけて約 11 日間の注入期間中、
+サンプリング周波数 2000 Hz で連続記録を行った。
+モーメントマグニチュード Mw −1.653〜−0.519 の微小地震イベント 40 件が
+検出・位置決定された [41]。
+イベント検出では信号対雑音比（SNR）を向上しデータ量を削減するため、
+5 トレースごとにスタッキングを実施した。
+各スタックトレースについては、24 ms 前と 6 ms 後の RMS 振幅を
+スライディングウィンドウで計算し、その比を SNR として評価した。
+到達直後では after ウィンドウに信号が含まれ、before ウィンドウが
+バックグラウンドノイズを表すため、この比が最大になる。
+</p>
+
+<p>
+雑音低減のため、300 Hz 最小位相ローパスフィルタと
+2 次元メディアン空間フィルタを適用して、
+広帯域ノイズとコモンモードノイズをそれぞれ除去した。
+DAS は 1 成分のひずみ（またはひずみ速度）のみを測定するため、
+イベント位置は 2 D 垂直グリッドに制約した。
+図 1 にフィールドデータのトレース例を示す。
+</p>
+
+<figure>
+  <img src="Figure_1.jpg" alt="Figure 1">
+  <figcaption>
+    Figure 1. Sample detected event (a) raw DAS traces before stacking
+    (b) raw traces after stacking (c) same traces after 300 Hz minimum-phase
+    low-pass and 2D spatial filtering. P arrival (red) and S arrival (yellow).
+  </figcaption>
+</figure>
+
+<h2>2.2. Training Data</h2>
+
+<p>
+ニューラルネットワークの学習・最適化には，合計 6 万件の合成微小地震イベントを生成して用いた。合成データ作成にあたり，地層境界深度が既知である一次元の傾斜横等方（VTI）速度モデルを考慮した。これは微小地震モニタリングで遭遇する地質構造の大部分を表現できるためである。強い異方性を採用することで，学習済みネットワークがより低い異方性レベルにも一般化できるようにした。層数 3～12 の 600 例の速度モデルをランダムに作成し，各モデルに対して後述のイベントを配置した [42]。
+</p>
+
+<p>
+<table>
+  <caption>Table&nbsp;1. 速度モデル生成に用いたパラメータ範囲（Thomsen パラメータ ε=0.51, γ=0.36, δ=0.25 は層内一定）</caption>
+  <thead>
+    <tr><th>Parameter</th><th>Minimum</th><th>Maximum</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>vp0 (m/s)</td><td>3830</td><td>5059</td></tr>
+    <tr><td>vs0 (m/s)</td><td>2193</td><td>3187</td></tr>
+    <tr><td>ρ (kg/m<sup>3</sup>)</td><td>2466</td><td>2711</td></tr>
+    <tr><td>Depth (m)</td><td>1000</td><td>1900</td></tr>
+  </tbody>
+</table>
+</p>
+
+<p>
+微小地震源は 700&nbsp;m&nbsp;×&nbsp;900&nbsp;m の垂直 2&nbsp;D グリッド内に均一分布でランダム配置した。処理坑井とモニタリング坑井の間隔は FORGE プロジェクトと同じく 400&nbsp;m とし，モニタリング坑井には 5&nbsp;m 間隔で 150&nbsp;チャネルの受振点を深度 1050–1795&nbsp;m に設置した。各速度モデルにつき 100&nbsp;イベントを生成し，合計 6&nbsp;万イベントとなる。震源のメカニズムは剪断破壊とし，strike・dip・rake 角をランダムに設定した。異方性によりイベントは主にダブルカップルで，わずかに偏差応力成分を含む。モーメントマグニチュードは −2.0 ≤ Mw ≤ 0 の範囲で設定した。
+</p>
+
+<p>
+各イベントについて，レイトレーシングにより走時と振幅を計算し，垂直成分のみを用いて粒子変位を算出した。フィールドデータから統計的に推定した波レット（図&nbsp;2）を基に，周波数帯 [50–100] Hz, [150–200] Hz, [300–350] Hz, [400–450] Hz の Ormsby 波レット [43] を震源時間関数として付与した。サンプリングは 0.5 ms，記録長 1 s とし，粒子変位をひずみ速度へ変換した。ひずみ \(e_{zz}\) は
+</p>
+
+<p>$$
+e_{zz}= \frac{\partial u_z}{\partial z}
+        = \frac{\partial u_z/\partial t}{\partial z / \partial t}
+        = \frac{\partial u_z}{\partial t}\, p_z \tag{1}
+$$</p>
+
+<p>
+で計算され，ここで \(u_z\) は鉛直変位，\(p_z\) はスロー ネス ベクトルの z 成分である [24]。
+</p>
+
+<p>
+得られた合成地震計波形にフィールド DAS 記録由来の実環境ノイズを重畳した。さらにノイズのみの波形 1 万件を加え，振幅を正規化したうえでスタッキングし，訓練データセットを拡充した（図&nbsp;3）。
+</p>
+
+<p>
+データセットの 1 サンプルは，単一イベントの 1 成分（1-C）スタック波形群と，対応するラベル（位置座標 \(x,z\) と速度モデルパラメータ \(v_{p0}, v_{s0}, \rho\)）で構成される。ノイズのみのサンプルについては回帰の都合上，ラベルをすべて 0 と設定した。
+</p>
+
+<figure>
+  <img src="Figure_2.jpg" alt="Figure 2">
+  <figcaption>Figure&nbsp;2. Statistical wavelet estimate from field data: (a) mean frequency spectrum of field signal, (b) estimated wavelet from field data, (c) source time function used in generating synthetic data.</figcaption>
+</figure>
+
+<figure>
+  <img src="Figure_3.jpg" alt="Figure 3">
+  <figcaption>Figure&nbsp;3. Sample synthetic data: (a) DAS microseismic events contaminated with ambient noise from field data, (b) sample DAS ambient noise extracted from field data.</figcaption>
+</figure>
+
+<h2>2.3. Convolutional Neural Network (CNN)</h2>
+
+<p>
+CNN は入力データ行列上を小さなフィルタ（カーネル）がスライドしながら畳み込み演算を行うことで特徴を抽出する。各カーネルは入力の全チャネル深度を覆い、位置ごとにスカラー積を計算して <em>activation map</em> を生成するため、パラメータ数が抑えられ大規模データでも学習が容易となる [44]。
+</p>
+
+<p>
+本研究では残差学習を導入した 50 層の <strong>ResNet-50</strong> [45] を基盤に採用した。残差リンクが勾配消失を緩和し高速収束を実現する。ネットワークは 49 個の畳み込み層と 1 個の全結合層から成り、畳み込み層は 5 つのステージ（Conv1, Conv2<sub>x</sub>–Conv5<sub>x</sub>）に分割される。ステージごとの出力サイズとカーネル構成を表&nbsp;1 に示す。
+</p>
+
+<table>
+  <caption>表&nbsp;1&nbsp;ResNet-50 の主要ブロック構成（抜粋）</caption>
+  <thead>
+    <tr><th>ブロック</th><th>出力サイズ</th><th>構成</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Conv1</td><td>128&nbsp;×&nbsp;128</td><td>7×7, 64, stride&nbsp;2</td></tr>
+    <tr><td>Conv2<sub>x</sub></td><td>64&nbsp;×&nbsp;64</td><td>[1×1,64; 3×3,64; 1×1,256]×3</td></tr>
+    <tr><td>Conv3<sub>x</sub></td><td>32&nbsp;×&nbsp;32</td><td>[1×1,128; 3×3,128; 1×1,512]×4</td></tr>
+    <tr><td>Conv4<sub>x</sub></td><td>16&nbsp;×&nbsp;16</td><td>[1×1,256; 3×3,256; 1×1,1024]×6</td></tr>
+    <tr><td>Conv5<sub>x</sub></td><td>8&nbsp;×&nbsp;8</td><td>[1×1,512; 3×3,512; 1×1,2048]×3</td></tr>
+  </tbody>
+</table>
+
+<p>
+活性化関数には計算効率の高い ReLU を用い、Conv1 後に 3×3 max-pool、Conv5<sub>x</sub> 後に平均プーリングを配置する。最後の畳み込み層の後に 256 ノードの全結合層を追加し、最終回帰層を 5 ユニット（イベント位置 <i>x</i>, <i>z</i> と速度モデル <i>v<sub>p0</sub></i>, <i>v<sub>s0</sub></i>, ρ）とすることで本課題に合わせた出力次元へ拡張した。
+</p>
+
+<p>
+入力データは 1-C DAS スタック波形を 256×256 ピクセルのグレースケール画像へ変換して与える。ネットワークは以下の写像を学習する：
+</p>
+
+<p>$$
+\operatorname{Net}(D;\,\theta)\;\to\;\tilde{m} \tag{2}
+$$</p>
+
+<p>
+ここで <i>D</i> は生波形集合，<i>θ</i> はネットワークパラメータ，\(\tilde{m} = (x,z,v_{p0},v_{s0},\rho)\) は予測ベクトルである [式&nbsp;(2)]。教師あり学習では平均二乗誤差損失
+</p>
+
+<p>$$
+\hat{\theta}
+  = \arg\min_{\theta}\,
+    \frac{1}{N}\sum_{i=1}^{N} L\!\bigl(m_i,\tilde{m}_i\bigr)
+    \tag{3}
+$$</p>
+
+<p>
+を最小化して <i>θ̂</i> を求める [式&nbsp;(3)]。 <br>
+最適化には Adam 法 [46] を用い、メモリ制約を考慮してミニバッチ学習（バッチサイズ 32）を採用した。
+</p>
+
+<p>
+このように構築した深層残差 CNN により、DAS 波形から微小地震イベントの検知・位置決定と速度モデル（<i>v<sub>p0</sub></i>, <i>v<sub>s0</sub></i>, ρ）の同時推定が可能となる。
+</p>
+
+<h2>2.4. Training and Validation of the Network</h2>
+
+<p>
+ネットワーク学習には前節で作成した 7 万サンプル
+（合成イベント 6 万 + ノイズのみ 1 万）を用い，
+90 %（6 万 3000 件）を <strong>訓練セット</strong>，
+10 %（7000 件）を <strong>検証セット</strong>に割り当てた。
+合成・ノイズ比，震源分布，速度モデル分布が
+両セットで同一になるよう層化サンプリングを行った。
+入力データは各サンプルを 256 × 256 ピクセルへリサイズし，
+振幅を −1 ～ 1 に正規化してネットワークへ供給した。
+</p>
+
+<p>
+<strong>損失関数</strong>は五つの出力変数
+\((x,z,v_{p0},v_{s0},\rho)\) に対する
+平均二乗誤差 (MSE) を用い，
+物理量のスケール差を補正するため
+各項を標準偏差で割って無次元化した。
+訓練はバッチサイズ 32，初期学習率
+\(1\times10^{-4}\) で Adam オプティマイザ [46] を用い，
+5 エポック連続で検証損失が改善しない場合に
+学習率を 0.5 倍に減衰させる
+ステップスケジューラを適用した [47]。
+最大エポック数は 100 だが，
+検証損失が 10 エポック改善しない場合に
+<strong>Early Stopping</strong>で学習を打ち切った [48]。
+</p>
+
+<p>
+過学習抑制のため，Conv3<sub>x</sub> 以降のブロックに
+ドロップアウト率 0.3 を挿入し，
+各畳み込み層のバイアスには
+L<sub>2</sub> 正則化 (\(\lambda=1\times10^{-5}\)) を課した。
+訓練中は入力画像に対し
+±5 % のガウシアン振幅スケール変動と
+±2 ピクセル以内のランダムシフトを加え，
+合成データと実データで観測される
+強度ばらつき・時間ずれを擬似的に再現した。
+</p>
+
+<p>
+<strong>評価指標</strong>には
+(1) 位置決定誤差 \(\sqrt{(x-\hat{x})^{2}+(z-\hat{z})^{2}}\)，
+(2) 速度モデルパラメータ誤差
+\(|v_{p0}-\hat{v}_{p0}|\), \(|v_{s0}-\hat{v}_{s0}|\),
+\(|\rho-\hat{\rho}|\) を用い，
+検証セット全体の平均絶対誤差 (MAE) を算出した。
+学習完了後，検証セットで得られた
+最も低い総合損失エポックの重みを保存し，
+次章以降のテスト（合成・実フィールドデータの比較）に用いた。
+</p>
+
+<h2>3.1. Synthetic Data Analysis</h2>
+
+<p>
+訓練済みネットワークの性能評価には，50 個の速度モデルから生成した 5000 件の DAS 微小地震イベントを含む <strong>テストデータセット</strong>を用いた。まず全サンプルをネットワークに入力し，予測値と真値の散布図を作成した（図&nbsp;6）。</p>
+
+<figure>
+  <img src="Figure_6.jpg" alt="Figure 6">
+  <figcaption>Figure&nbsp;6. Scatter plots of predictions versus ground-truth values of event depth location and velocity model parameters \(v_{p0}, v_{s0}, \rho\). The plots show strong positive correlation.</figcaption>
+</figure>
+
+<p>
+図&nbsp;6 に示すように，イベント位置 \((x, z)\) と速度モデルパラメータ \((v_{p0}, v_{s0}, \rho)\) の予測値は真値と高い正の相関を示し，CNN が DAS データから検知・位置決定・速度モデル反転を同時に行えることを示している。</p>
+
+<p>
+モデル適合度をさらに検証するため，残差診断を実施した。良好なモデルでは残差がゼロ付近でランダムに分布し，かつその平均がゼロに近いことが求められる。図&nbsp;7 のヒストグラムは，五つのパラメータすべてで残差が正規分布に従い，平均値がゼロ付近に集中していることを確認できる。</p>
+
+<figure>
+  <img src="Figure_7.jpg" alt="Figure 7">
+  <figcaption>Figure&nbsp;7. Residual diagnostic histograms for the trained CNN model. The blue envelope represents the probability density function. The velocity model parameters for each histogram are indicated at the bottom center of each plot.</figcaption>
+</figure>
+
+<p>
+イベント位置の予測精度を可視化するため，単一速度モデルから選んだ 100 イベントについて，予測位置（青★）と真値（赤★）を 2D 平面図上に重ねて示した（図&nbsp;8）。両者はほぼ完全に重なり，ごく一部でわずかな偏差が見られるのみである。</p>
+
+<figure>
+  <img src="Figure_8.jpg" alt="Figure 8">
+  <figcaption>Figure&nbsp;8. 2D plan view projection of the inverted DAS microseismic depth locations (blue stars) versus ground-truth locations (red stars). Only 100 events from one velocity model are displayed.</figcaption>
+</figure>
+
+<p>
+速度モデルの推定精度を評価するため，深度プロファイル上で予測値と真値を比較した（図&nbsp;9）。\(v_{p0}, v_{s0}, \rho\) の各曲線は，全深度域でパターンが良好に一致しており，ネットワークが速度構造を適切に再現していることが分かる。</p>
+
+<figure>
+  <img src="Figure_9.jpg" alt="Figure 9">
+  <figcaption>Figure&nbsp;9. 1D velocity model profiles for prediction versus ground-truth values. Blue, green and black curves denote ground-truth \(v_{p0}, v_{s0}, \rho\)，赤，橙，シアンはそれぞれの推定値を示す。</figcaption>
+</figure>
+
+<p>
+全テストデータについて五つの推定パラメータに対する統計解析の結果を図&nbsp;10 に示す。平均絶対誤差（MAE）は位置 \((x, z)\) で 2.04&nbsp;% と 0.72&nbsp;%，速度モデル \((v_{p0}, v_{s0}, \rho)\) で 2.76&nbsp;%，4.19&nbsp;%，0.97&nbsp;% であった。対応する標準偏差は 5.49，4.80，26.30，24.60，26.96 と，位置推定に比べ速度パラメータのばらつきがやや大きい。</p>
+
+<figure>
+  <img src="Figure_10.jpg" alt="Figure 10">
+  <figcaption>Figure&nbsp;10. Error bar graph for the location and velocity model parameters inverted by deep learning. Cyan, purple and white bars represent the mean absolute error, standard deviation and inter-quartile range, respectively.</figcaption>
+</figure>
+
+<p>
+速度パラメータ誤差の標準偏差が位置推定より大きい理由として，(i) 速度モデル数がイベント数に比べて少なく情報量が不足していること，(ii) モデルごとの層数（3–12 層）が変動し，ネットワークが速度構造を十分に学習し切れていない可能性があることが挙げられる。今後は速度モデル数を増やし，層数を固定することで精度向上が期待される。</p>
+
+<h2>3.2. Field Data Analysis</h2>
+
+<p>
+本節では，<a href="https://gdr.openei.org/">FORGE</a> プロジェクト（ユタ州ミルフォード近郊）で取得された
+坑井 DAS フィールドデータに対して，深層学習手法の性能を検証した。
+対象データベースは，約 11 日間にわたり連続収録された 15 s 長 SEG-Y ファイルから成り，
+さまざまなマグニチュードの微小地震イベントを含む。
+解析には，ステージ 27 と 28 のサイクル 7 と 8 に相当する
+<strong>3 時間分</strong>（既知イベント 30 件を含む）を抽出した [41]。
+</p>
+
+<p>
+元データを <strong>1 s ウィンドウ</strong>（サンプル数 2000）にスライディング分割し，
+300 Hz 最小位相ローパスフィルタで広帯域ノイズを抑制した後，
+2 D メディアン空間フィルタでコモンモードノイズを除去した。
+得られたテストセットは <strong>1 万 800 サンプル</strong>で，
+各サンプルを振幅正規化し，
+256 × 256 ピクセルのグレースケール画像へ変換した以外の前処理は行っていない。
+</p>
+
+<p>
+前章で学習済みの CNN にテストセット全体を入力し，
+イベント位置 \((x,z)\) と速度モデルパラメータ
+\((v_{p0}, v_{s0}, \rho)\) を同時に推定した結果を図 11 に示す。
+</p>
+
+<figure>
+  <img src="Figure_11.jpg" alt="Figure 11">
+  <figcaption>図11&nbsp;DAS フィールドデータに対する推定結果。
+    (a) 予測されたイベント深度位置，
+    (b) 速度モデル \((v_{p0}, v_{s0}, \rho)\) の推定プロファイル。</figcaption>
+</figure>
+
+<p>
+確認済み 30 イベントに加え，
+CNN は <strong>未報告の低マグニチュードイベント 6 件</strong>を新たに検出・位置決定した。
+なお，イベントのモーメントマグニチュード決定は本研究の範囲外である。
+</p>
+
+<h2>4. Discussion</h2>
+
+<p>
+分散型音響センシング（Distributed Acoustic Sensing; DAS）とディープラーニングは、いずれも微小地震モニタリングにおいて有望な新技術であり、両者を組み合わせることでブレイクスルーが期待できる。近年、DAS は高い空間・時間分解能と物理的堅牢性により微小地震データ取得の有力な選択肢となっているが、DAS センサから発生する膨大なデータ量は従来手法ではリアルタイム／セミリアルタイム処理が困難である。この課題を解決するのがディープラーニングである。</p>
+
+<p>
+地震イベントの検出、位置決定、速度モデル反転には従来から多くの標準ツールが存在するが、ディープラーニング手法はこれら三段階を単一ネットワークで同時に実行でき、処理時間を大幅に短縮する。本研究では、DAS で取得した微小地震データに対しディープラーニングを適用する可能性を検証した。</p>
+
+<p>
+ユタ州ミルフォード近郊 FORGE 強化地熱プロジェクトの合成データおよびフィールドデータを用いた結果は、DAS データ反転におけるディープラーニングの潜在力を示している。図11に示すように、DAS 記録から微小地震イベントを高精度に検出・位置決定し、速度モデルも良好に近似できた。水圧破砕のような能動運用ではリアルタイム、受動モニタリングではセミリアルタイムでタスクを実行できる。</p>
+
+<p>
+提案手法は石油・鉱業エンジニアの現場意思決定を迅速化し、生産最適化に寄与する可能性がある。ただし、異なる地層での長期モニタリングデータによる検証が必要である。</p>
+
+<p>
+学習データセット生成にはレイトレーシングを用いたが、反射法計算やフル波形数値計算を利用することも可能である。レイトレーシングは多用途で計算効率に優れるため選択した。層状で緩やかに変化する媒質では十分な精度の近似解を与える。</p>
+
+<p>
+しかしレイトレーシングは波動方程式の近似解であるため、媒質が急峻に変化する場合や特異点では結果が不正確、あるいは収束しない恐れがある [47]。本研究では一次元層状異方性速度モデルを用いたが、三次元モデルを用いた反復的アプローチによりさらなる精度向上が期待される。</p>
+
+<h2>4.1. Limitations of DAS</h2>
+
+<p>
+DAS の感度は、光ファイバの配向に対する地震エネルギーの入射角によって決定される。一般に、DAS は光ファイバ軸方向に沿って到来する地震信号に最も敏感であり、軸に対して直交する、いわゆるブロードサイド入射信号には感度が低い。</p>
+
+<p>
+この方向依存性は、特定の入射角で到来する地震波の位相と関連している。入射角 φ を、光ファイバ軸方向に沿う到来（0°）から直交方向の到来（90°）までと定義すると、P 波の感度は φ が 0° に近づくほど高く、90° に近づくほど低くなる（図12）。</p>
+
+<p>
+一方、S 波は運動方向に対して直交方向に波が進むため、入射角が 90° に近づくほど感度が高まり、0° に近づくほど感度が低下する。</p>
+
+<h2>4.2. Limitations of Deep Learning</h2>
+
+<p>
+ディープラーニングモデルはネットワーク構造が大規模であるため、学習には膨大な量のデータが必要となる。DAS を用いた微小地震／パッシブ地震モニタリングではデータ不足自体は問題にならないが、データ量の多さゆえに <em>学習過程</em> が極めて計算集約的になり、膨大な計算リソースと時間を要する。また、ある地点や運用条件で学習したモデルを別の地点・条件に適用する場合には、一般に <strong>再学習（リトレーニング）</strong> を必要とする。ただし一度学習が完了すれば、推論（予測）フェーズは計算効率が高く、リアルタイム処理に十分対応できる。</p>
+
+<p>
+さらに、ベンチマーク用の学習データセット上では高い性能を示すモデルであっても、<strong>現場データ</strong>に大きなドメインギャップ（分布の違い）が存在すると、性能が大幅に低下する可能性がある。すなわち、トレーニングデータの特徴とフィールドデータの特徴をどのように対応付け、モデル空間に反映させるかが実運用上の大きな課題である。</p>
+
+<h2>4.3. Field Implementation</h2>
+
+<p>
+深層学習アプローチはオンサイトの自動化フィールドデータ処理ワークフローに容易に組み込むことができる。最近、DAS の取得と処理を自動化したフィールド実験が Isaenkov らにより報告されており、5 本の深井戸アレイで 1 日あたり約 1.3 TB の RAW データを生成し、能動型タイムラプス VSP として処理している [48]。同研究で行われたデータ前処理は、本研究で採用した手順とほぼ同一である。
+</p>
+
+<p>
+具体的には、セクション 3.2 で述べたように、前処理ではフィルタリング、ダウンサンプリング、およびガザーをグレースケール画像へ変換する。その後、画像を学習済み CNN モデルに入力して反演を実施し、ニューラルネットワークは検出イベントの位置と速度モデルの推定値を同時に出力する。処理は極めて高速で、たとえば 1.3 GB の前処理済みデータをオクタコア CPU で処理するのに要した時間は 673 ms であった。
+</p>
+
+<p>
+水圧破砕のような能動的オペレーションの場合、データをリアルタイムでストリーミングすることで入力データ量をさらに削減でき、処理時間も短縮される。
+</p>
+
+<h2>5. Conclusions</h2>
+
+<p>
+本研究の結果は，ディープニューラルネットワークが DAS で取得した微小地震波形とイベント位置・速度モデルとの関係を高精度に学習できることを示した。また，速度モデルの更新とイベント位置決定という二つのタスクを単一ネットワークで同時に実行できるため，リアルタイム／セミリアルタイムの微小地震モニタリングにおいて極めて有望である。
+</p>
+
+<p>
+本手法は，記録波形の特性をネットワーク自身が自律的に学習・解釈するため，必要なデータ前処理が最小限で済む。その結果，人的データ操作に伴う不確実性が排除され，データ整合性が維持される。さらに，新たなデータが取得されるたびにオンラインで学習を継続でき，モデル性能を逐次向上させることが可能である。
+</p>
+
+<p>
+一度学習が完了したモデルは計算効率に優れ，たとえば 5000 件のテストデータセットの反演にはオクタコア CPU で 673&nbsp;ms しか要さなかった。
+</p>
+
+<p>
+将来的には，さまざまな異方性を有するより複雑な地質構造に対してネットワークの性能を検証することが重要である。また，従来手法と特殊化した深層学習モデルを組み合わせることで，幅広い複雑な地質条件を扱える革新的ネットワーク設計を探求すべきである。
+</p>
+
+
+  </div>
+</body>
